@@ -11,6 +11,7 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import rtlPlugin from "stylis-plugin-rtl";
 import { prefixer } from "stylis";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -27,19 +28,22 @@ const theme = createTheme({
 });
 
 function App() {
+  const queryClient = new QueryClient();
   return (
-    <CacheProvider value={cacheRtl}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Routes>
-          <Route path="/" element={<DashboardLayoutBasic />} />
-          <Route path="/login" element={<LoginUser />} />
-          <Route path="/signup" element={<UserSignUpScreen />} />
-          <Route path="/userList" element={<UserListScreen />} />
-          <Route path="/results" element={<ResultsScreen />} />
-        </Routes>
-      </ThemeProvider>
-    </CacheProvider>
+    <QueryClientProvider client={queryClient}>
+      <CacheProvider value={cacheRtl}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Routes>
+            <Route path="/" element={<DashboardLayoutBasic />} />
+            <Route path="/login" element={<LoginUser />} />
+            <Route path="/signup" element={<UserSignUpScreen />} />
+            <Route path="/userList" element={<UserListScreen />} />
+            <Route path="/results" element={<ResultsScreen />} />
+          </Routes>
+        </ThemeProvider>
+      </CacheProvider>
+    </QueryClientProvider>
   );
 }
 
