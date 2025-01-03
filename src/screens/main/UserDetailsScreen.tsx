@@ -29,6 +29,27 @@ const Skeleton = styled("div")<{ height: number }>(({ theme, height }) => ({
 export default function UserDetailsScreen() {
   const location = useLocation();
   const user = location.state.user;
+  
+  const initialRows = user.results.flatMap((result) =>
+    result.subjects.map((subject, index) => {
+      const firstTerm = subject.marks.find((mark) => mark.term === 1)?.score || 0;
+      const secondTerm = subject.marks.find((mark) => mark.term === 2)?.score || 0;
+      const finalMarks = firstTerm + secondTerm;
+      return {
+        id: index + 1,
+        name: subject.subject.name, // اسم المادة الدراسية
+        firstTerm,
+        secondTerm,
+        finalMarks,
+        status: finalMarks > 50 ? "ناجح" : "راسب", // ناجح if > 50
+      };
+    })
+  );
+  const subjects = user.results.flatMap((result) =>
+    result.subjects.map((subject) => subject.subject.name)
+  );
+  console.log("subjects name ", initialRows);
+
 
   return (
     <Paper
@@ -96,7 +117,7 @@ export default function UserDetailsScreen() {
                 }}
                 size={12.6}
               >
-                <ResultTableCrudGrid />
+                <ResultTableCrudGrid rows={initialRows}  subjects={subjects}/>
               </Grid2>
             </UserProfileTap>
           </Grid>

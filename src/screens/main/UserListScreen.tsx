@@ -57,6 +57,7 @@ const UserListScreen = () => {
       gender: user.gender === "m" ? "ذكر" : "أنثى",
       role: user.role === "Student" ? "طالب" : "معلم",
       status: user.active ? "نشط" : "غير نشط",
+      results: user.results,
     })) || [];
   const goToUserDetails = (user) => {
     navigate(`/userDetails`, {

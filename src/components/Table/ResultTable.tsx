@@ -22,116 +22,25 @@ import {
 } from "@mui/x-data-grid";
 import { styled } from '@mui/material/styles';
 
+interface RowData {
+  id: number;
+  name: string;
+  firstTerm: number;
+  secondTerm: number;
+  finalMarks: number;
+  status: string;
+}
+
+interface ResultTableProps {
+  rows: RowData[];
+  subjects: [];
+  setRows?: (newRows: RowData[]) => void;
+}
+
 // Helper function to generate random ID
 const randomId = () => Math.floor(Math.random() * 10000) + 1;
 
-// Generate fake data for the rows
-const initialRows: GridRowsProp = [
-  {
-    id: 1,
-    name: "رياضيات", // اسم المادة الدراسية
-    firstTerm: 40,
-    secondTerm: 30,
-    finalMarks: 70,
-    status: "ناجح",
-  },
-  {
-    id: randomId(),
-    name: "فيزياء", // اسم المادة الدراسية
-    firstTerm: 35,
-    secondTerm: 40,
-    finalMarks: 75,
-    status: "ناجح",
-  },
-  {
-    id: randomId(),
-    name: "كيمياء", // اسم المادة الدراسية
-    firstTerm: 45,
-    secondTerm: 40,
-    finalMarks: 85,
-    status: "ناجح",
-  },
-  {
-    id: randomId(),
-    name: "أحياء", // اسم المادة الدراسية
-    firstTerm: 25,
-    secondTerm: 30,
-    finalMarks: 55,
-    status: "راسب",
-  },
-  {
-    id: randomId(),
-    name: "لغة عربية", // اسم المادة الدراسية
-    firstTerm: 50,
-    secondTerm: 45,
-    finalMarks: 95,
-    status: "ناجح",
-  },
-  {
-    id: randomId(),
-    name: "إنجليزي", // اسم المادة الدراسية
-    firstTerm: 60,
-    secondTerm: 50,
-    finalMarks: 110,
-    status: "ناجح",
-  },
-  {
-    id: randomId(),
-    name: "تاريخ", // اسم المادة الدراسية
-    firstTerm: 55,
-    secondTerm: 45,
-    finalMarks: 100,
-    status: "ناجح",
-  },
-  {
-    id: randomId(),
-    name: "جغرافيا", // اسم المادة الدراسية
-    firstTerm: 40,
-    secondTerm: 50,
-    finalMarks: 90,
-    status: "ناجح",
-  },
-  {
-    id: randomId(),
-    name: "معلوماتية", // اسم المادة الدراسية
-    firstTerm: 50,
-    secondTerm: 50,
-    finalMarks: 100,
-    status: "ناجح",
-  },
-  {
-    id: randomId(),
-    name: "فلسفة", // اسم المادة الدراسية
-    firstTerm: 30,
-    secondTerm: 40,
-    finalMarks: 70,
-    status: "ناجح",
-  },
-  {
-    id: randomId(),
-    name: "علم نفس", // اسم المادة الدراسية
-    firstTerm: 60,
-    secondTerm: 60,
-    finalMarks: 120,
-    status: "ناجح",
-  },
-  {
-    id: randomId(),
-    name: "تربية إسلامية", // اسم المادة الدراسية
-    firstTerm: 45,
-    secondTerm: 50,
-    finalMarks: 95,
-    status: "ناجح",
-  },
-  {
-    id: randomId(),
-    name: "فن", // اسم المادة الدراسية
-    firstTerm: 50,
-    secondTerm: 45,
-    finalMarks: 95,
-    status: "ناجح",
-  },
-];
+
 
 declare module "@mui/x-data-grid" {
   interface ToolbarPropsOverrides {
@@ -166,8 +75,8 @@ function EditToolbar(props: GridSlotProps["toolbar"]) {
   );
 }
 
-export default function ResultTableCrudGrid() {
-  const [rows, setRows] = React.useState(initialRows);
+export default function ResultTableCrudGrid(props:ResultTableProps) {
+  // const [rows, setRows] = React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   );
@@ -190,7 +99,7 @@ export default function ResultTableCrudGrid() {
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    setRows(rows.filter((row) => row.id !== id));
+    //setRows(rows.filter((row) => row.id !== id));
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -199,15 +108,15 @@ export default function ResultTableCrudGrid() {
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
 
-    const editedRow = rows.find((row) => row.id === id);
-    if (editedRow!.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
-    }
+    // const editedRow = rows.find((row) => row.id === id);
+    // if (editedRow!.isNew) {
+    //   setRows(rows.filter((row) => row.id !== id));
+    // }
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    //setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
   };
 
@@ -220,6 +129,10 @@ export default function ResultTableCrudGrid() {
       field: "name",
       headerName: "المادة الدراسية",
       width: 180,
+      type:'singleSelect',
+      valueOptions: props.subjects,
+      align: "center",
+      headerAlign: "center",
       editable: true,
     },
     {
@@ -253,7 +166,7 @@ export default function ResultTableCrudGrid() {
       field: "status",
       headerName: "الحالة",
       width: 120,
-      editable: true,
+      editable: false,
       type: "singleSelect",
       valueOptions: ["ناجح", "راسب"],
       align: "center",
@@ -348,7 +261,7 @@ export default function ResultTableCrudGrid() {
       }}
     >
       <StyledDataGrid
-        rows={rows}
+        rows={props.rows}
         style={{ direction: "rtl" }}
         columns={columns}
         editMode="row"
@@ -364,7 +277,7 @@ export default function ResultTableCrudGrid() {
         hideFooterPagination={true}
         slots={{ toolbar: EditToolbar }}
         slotProps={{
-          toolbar: { setRows, setRowModesModel },
+          //toolbar: { props.setRows, setRowModesModel },
         }}
       />
     </Box>
