@@ -9,8 +9,8 @@ class NetWorkService {
     this.endPoint = endPoint;
   }
 
-  async getAll() {
-    const response = await apiClient.get(this.endPoint);
+  async getAll<T>(subEndPoint:T) {
+    const response = await apiClient.post(`${this.endPoint}${subEndPoint}`);
     return response.data;
   }
 

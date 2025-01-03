@@ -26,7 +26,7 @@ import MultipleSelect from "../../components/Select/AppSelect";
 import useGettingAllUser from "../../hooks/useGettingAllUser";
 import { useNavigate } from "react-router-dom";
 
-const UserListScreen = () => {
+const TeachersScreen = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
   const [openDialog, setOpenDialog] = React.useState(false);
@@ -47,7 +47,7 @@ const UserListScreen = () => {
   };
 
   const mappedUsers =
-    users?.map((user) => ({
+  users.filter((user) => user.role === "Teacher").map((user) => ({
       id: user.username,
       name: user.name,
       className:
@@ -59,9 +59,7 @@ const UserListScreen = () => {
       status: user.active ? "نشط" : "غير نشط",
     })) || [];
   const goToUserDetails = (user) => {
-    navigate(`/userDetails`, {
-      state: { user },
-    });
+    console.log(user);
   };
   return (
     <Box sx={{ padding: theme.spacing(2) }}>
@@ -126,6 +124,7 @@ const UserListScreen = () => {
                 <TableCell
                   sx={{
                     fontWeight: "bold",
+
                     backgroundColor: "#f0f0f0",
                   }}
                 >
@@ -179,7 +178,7 @@ const UserListScreen = () => {
       {/* Dialog */}
       <GenericDialog
         openDialog={openDialog}
-        title="اضافة طالب جديد"
+        title="اضافة معلم جديد"
         componentType="form"
       >
         <Grid container spacing={2} sx={{ width: "100%" }}>
@@ -225,4 +224,4 @@ const UserListScreen = () => {
   );
 };
 
-export default UserListScreen;
+export default TeachersScreen;

@@ -3,7 +3,7 @@ import LayersIcon from "@mui/icons-material/Layers";
 import { AppProvider, Navigation, Router } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { PageContainer } from "@toolpad/core/PageContainer";
-import { Class, People, Quiz, School } from "@mui/icons-material";
+import { Class, People, Quiz, School, SchoolRounded } from "@mui/icons-material";
 import UserListScreen from "./UserListScreen";
 import ResultsScreen from "./ResultsScreen";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -12,22 +12,31 @@ import { CacheProvider } from "@emotion/react";
 import createCache from "@emotion/cache";
 import rtlPlugin from "stylis-plugin-rtl";
 import { prefixer } from "stylis";
+import TeachersScreen from "./TeachersScreen";
 
 const NAVIGATION: Navigation = [
   {
     kind: "header",
     title: "القائمة",
   },
+  {
+    kind: "divider",
+  },
+  {
+    segment: "dashboard",
+    title: "لوحة التحكم",
+    icon: <LayersIcon />,
+  },
 
   {
-    segment: "userList",
-    title: "جميع المستخدمين",
+    segment: "teacherList",
+    title: "المعلمين",
     icon: <People />,
   },
   {
-    segment: "results",
-    title: "النتائج",
-    icon: <Quiz />,
+    segment: "studentList",
+    title: "الطلاب",
+    icon: <SchoolRounded />,
   },
   {
     segment: "classes",
@@ -39,8 +48,11 @@ const NAVIGATION: Navigation = [
     title: "مواد دراسية ",
     icon: <School />,
   },
-  
-  
+  {
+    segment: "results",
+    title: "النتائج",
+    icon: <Quiz />,
+  },
 ];
 
 // Create rtl cache
@@ -75,7 +87,7 @@ export default function DashboardLayoutBasic() {
   const router = useDemoRouter("/userList");
   return (
     <CacheProvider value={cacheRtl}>
-      <ThemeProvider defaultMode="dark" theme={theme}>
+      <ThemeProvider defaultMode="light" theme={theme}>
         <CssBaseline />
         <AppProvider navigation={NAVIGATION} router={router}>
           <DashboardLayout
@@ -95,7 +107,8 @@ export default function DashboardLayoutBasic() {
             }}
           >
             <PageContainer>
-              {router.pathname === "/userList" && <UserListScreen />}
+              {router.pathname === "/studentList" && <UserListScreen />}
+              {router.pathname === "/teacherList" && <TeachersScreen />}
               {router.pathname === "/results" && <ResultsScreen />}
             </PageContainer>
           </DashboardLayout>

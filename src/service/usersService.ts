@@ -1,5 +1,5 @@
 import create from "./network";
 
-const gamesService = create("/user");
+const usersService = create("/user");
 
-export default gamesService;
+export default usersService;
