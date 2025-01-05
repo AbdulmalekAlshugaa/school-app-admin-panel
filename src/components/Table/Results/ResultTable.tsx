@@ -18,29 +18,30 @@ import {
   GridRowId,
   GridRowModel,
   GridRowEditStopReasons,
-  GridSlotProps,
 } from "@mui/x-data-grid";
-import { styled } from '@mui/material/styles';
-
-interface RowData {
-  id: number;
-  name: string;
-  firstTerm: number;
-  secondTerm: number;
-  finalMarks: number;
-  status: string;
-}
+import { styled } from "@mui/material/styles";
+import { RowData } from "./types";
+import GenericDialog from "../../Popup/GenericDialog";
+import {
+  FormControl,
+  FormControlLabel,
+  Grid2,
+  InputLabel,
+  MenuItem,
+  Radio,
+  TextField,
+} from "@mui/material";
+import DropDownList from "../../DropDownList/DropDownList";
+import RowRadioButtonsGroup from "../../RadioButton/RowRadioButtonsGroup";
+import useAddingUserResult from "../../../hooks/useAddingUser";
+import LoadingButton from "@mui/lab/LoadingButton";
+import AlertMessage from "../../Toast/AlertMessage";
 
 interface ResultTableProps {
   rows: RowData[];
   subjects: [];
   setRows?: (newRows: RowData[]) => void;
 }
-
-// Helper function to generate random ID
-const randomId = () => Math.floor(Math.random() * 10000) + 1;
-
-
 
 declare module "@mui/x-data-grid" {
   interface ToolbarPropsOverrides {
@@ -51,35 +52,43 @@ declare module "@mui/x-data-grid" {
   }
 }
 
-function EditToolbar(props: GridSlotProps["toolbar"]) {
-  const { setRows, setRowModesModel } = props;
-
-  const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [
-      ...oldRows,
-      { id, name: "", firstTerm: 0, secondTerm: 0, finalMarks: 0, status: "" },
-    ]);
-    setRowModesModel((oldModel) => ({
-      ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "name" },
-    }));
-  };
-
-  return (
-    <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        اضافة
-      </Button>
-    </GridToolbarContainer>
-  );
-}
-
-export default function ResultTableCrudGrid(props:ResultTableProps) {
-  // const [rows, setRows] = React.useState([]);
+export default function ResultTableCrudGrid(props: ResultTableProps) {
   const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
     {}
   );
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [studyYear, setStudyYear] = React.useState("");
+  const [subject, setSubject] = React.useState("");
+  const [term, setTerm] = React.useState("");
+  const [score, setScore] = React.useState("");
+  const [isSuccessPopup, setIsSuccessPopup] = React.useState(false);
+  const { mutate, isPending } = useAddingUserResult();
+
+  const handleAddingResult = async () => {
+    const data = {
+      year: studyYear,
+      userId: "6776bc0881fe8d4fa889f672",
+      subjectId: subject,
+      term: parseInt(term),
+      score: parseInt(score),
+    };
+
+    mutate(data);
+    mutate(data, {
+      onSuccess: () => {
+        setOpenDialog(false);
+        setStudyYear("");
+        setSubject("");
+        setTerm("");
+        setScore("");
+        setIsSuccessPopup(true);
+      },
+      onError: (error) => {
+        console.error("Error adding result:", error);
+        // Handle error state if needed
+      },
+    });
+  };
 
   const handleRowEditStop: GridEventListener<"rowEditStop"> = (
     params,
@@ -123,14 +132,27 @@ export default function ResultTableCrudGrid(props:ResultTableProps) {
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
     setRowModesModel(newRowModesModel);
   };
+  function EditToolbar() {
+    const handleClick = () => {
+      setOpenDialog(true);
+    };
+
+    return (
+      <GridToolbarContainer>
+        <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+          اضافة
+        </Button>
+      </GridToolbarContainer>
+    );
+  }
 
   const columns: GridColDef[] = [
     {
       field: "name",
       headerName: "المادة الدراسية",
       width: 180,
-      type:'singleSelect',
-      valueOptions: props.subjects,
+      type: "singleSelect",
+      valueOptions: props.subjects.map((subject: any) => subject.name),
       align: "center",
       headerAlign: "center",
       editable: true,
@@ -214,24 +236,23 @@ export default function ResultTableCrudGrid(props:ResultTableProps) {
 
         return [
           <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Edit"
-          sx={{
-            color: "grey",
-            "&:hover": {
-              color: "darkblue",
-            },
-            marginRight: 1,
-          }}
-          onClick={handleEditClick(id)}
-        />,
-        <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            sx={{
+              color: "grey",
+              "&:hover": {
+                color: "darkblue",
+              },
+              marginRight: 1,
+            }}
+            onClick={handleEditClick(id)}
+          />,
+          <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
             onClick={handleDeleteClick(id)}
             color="inherit"
           />,
-  
         ];
       },
     },
@@ -244,7 +265,6 @@ export default function ResultTableCrudGrid(props:ResultTableProps) {
     "& .textPrimary": {
       color: theme.palette.text.primary,
     },
-   
   }));
 
   return (
@@ -260,6 +280,102 @@ export default function ResultTableCrudGrid(props:ResultTableProps) {
         },
       }}
     >
+      <AlertMessage
+        setOpen={setIsSuccessPopup}
+        open={isSuccessPopup}
+        message="تم اضافة النتيجة بنجاح"
+      />
+      <GenericDialog
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        title="اضافة جديد"
+        componentType="form"
+        style={{
+          borderRadius: 4,
+          flex: 1,
+          flexDirection: "column",
+          animation: "grow 0.3s ease-out",
+        }}
+      >
+        <Grid2
+          spacing={{
+            xs: 2,
+            sm: 3,
+            md: 4,
+          }}
+          marginBottom={2}
+        >
+          <RowRadioButtonsGroup
+            setSelectedValue={(val) => {
+              setTerm(val);
+            }}
+            selectedValue={term}
+            title="الفصل الدراسي"
+          >
+            <FormControlLabel value={1} control={<Radio />} label="الاول" />
+            <FormControlLabel value={2} control={<Radio />} label="الثاني" />
+          </RowRadioButtonsGroup>
+          <FormControl fullWidth>
+            <InputLabel id="demo-simple-select-label">
+              اختار السنة الدراسية{" "}
+            </InputLabel>
+            <DropDownList
+              setValue={(value) => {
+                setStudyYear(value);
+              }}
+              label="اختار السنة الدراسية"
+              value={studyYear}
+            >
+              <MenuItem value={"2024-2025"}>2024-2025</MenuItem>
+              <MenuItem value={"2025-2026"}> 2025-2026</MenuItem>
+              <MenuItem value={"2026-2027"}> 2026-2027</MenuItem>
+            </DropDownList>
+          </FormControl>
+
+          <FormControl sx={{ marginTop: 3 }} fullWidth>
+            <InputLabel id="subject-select-label">
+              اختار المادة الدراسية{" "}
+            </InputLabel>
+            <DropDownList
+              setValue={(value) => {
+                setSubject(value);
+              }}
+              label="اختار المادة الدراسية"
+              value={subject}
+            >
+              {props.subjects.map((subject: any) => (
+                <MenuItem value={subject._id}>{subject.name}</MenuItem>
+              ))}
+            </DropDownList>
+          </FormControl>
+        </Grid2>
+        <Grid2
+          marginBottom={2}
+          sx={{
+            minWidth: "300px", // Set minimum width
+            flexGrow: 1, // Allow
+          }}
+        >
+          <TextField
+            variant="outlined"
+            required
+            value={score}
+            onChange={(e) => setScore(e.target.value)}
+            id="score"
+            label="العلامة"
+            name=" العلامة"
+            fullWidth
+          />
+        </Grid2>
+        <LoadingButton
+          loading={isPending}
+          variant="contained"
+          sx={{ mt: 3, width: "100%", flexGrow: 1 }}
+          onClick={handleAddingResult}
+        >
+          اضافه النتيجة
+        </LoadingButton>
+      </GenericDialog>
       <StyledDataGrid
         rows={props.rows}
         style={{ direction: "rtl" }}
@@ -276,9 +392,6 @@ export default function ResultTableCrudGrid(props:ResultTableProps) {
         processRowUpdate={processRowUpdate}
         hideFooterPagination={true}
         slots={{ toolbar: EditToolbar }}
-        slotProps={{
-          //toolbar: { props.setRows, setRowModesModel },
-        }}
       />
     </Box>
   );

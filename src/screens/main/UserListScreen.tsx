@@ -180,6 +180,7 @@ const UserListScreen = () => {
       {/* Dialog */}
       <GenericDialog
         openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
         title="اضافة طالب جديد"
         componentType="form"
       >

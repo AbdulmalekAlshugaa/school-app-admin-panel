@@ -56,9 +56,9 @@ export default function UserProfileTap(props: UserProfileTapProps) {
     <Box sx={{ bgcolor: "background.gray" }}>
       <AppBar
         sx={{
-          backgroundColor: "lightgray",
+          backgroundColor: "#C5C5C5",
           color: "black",
-          paddingTop: 5,
+
           justifyContent: "center",
           alignContent: "center",
           borderRadius: 1,
@@ -77,7 +77,7 @@ export default function UserProfileTap(props: UserProfileTapProps) {
             sx={{
               color: "black",
               fontWeight: "bold",
-              fontSize: "1.2rem",
+              fontSize: "0.9rem",
             }}
             label="النتائج"
             {...a11yProps(0)}
@@ -86,7 +86,7 @@ export default function UserProfileTap(props: UserProfileTapProps) {
             sx={{
               color: "black",
               fontWeight: "bold",
-              fontSize: "1.2rem",
+              fontSize: "0.9rem",
             }}
             label="المواد الدراسية "
             {...a11yProps(1)}
@@ -95,7 +95,7 @@ export default function UserProfileTap(props: UserProfileTapProps) {
             sx={{
               color: "black",
               fontWeight: "bold",
-              fontSize: "1.2rem",
+              fontSize: "0.9rem",
             }}
             label="الحضور"
             {...a11yProps(2)}
@@ -105,7 +105,6 @@ export default function UserProfileTap(props: UserProfileTapProps) {
       <TabPanel value={value} index={props.index} dir={theme.direction}>
         {props.children}
       </TabPanel>
-      
     </Box>
   );
 }

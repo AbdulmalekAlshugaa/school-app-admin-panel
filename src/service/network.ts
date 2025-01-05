@@ -20,8 +20,8 @@ class NetWorkService {
     return response.data;
   }
 
-  async post<T>(data: T) {
-    const response = await apiClient.post(this.endPoint, data);
+  async post<T>(subEndPoint:string, data: T) {
+    const response = await apiClient.post(`${this.endPoint}${subEndPoint}`, data);
     return response.data;
   }
 

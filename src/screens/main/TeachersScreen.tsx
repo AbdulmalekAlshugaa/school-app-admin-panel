@@ -47,17 +47,19 @@ const TeachersScreen = () => {
   };
 
   const mappedUsers =
-  users.filter((user) => user.role === "Teacher").map((user) => ({
-      id: user.username,
-      name: user.name,
-      className:
-        user.role === "Student"
-          ? user.classes[0].name
-          : user.classes.map((c) => c.name).join(", "),
-      gender: user.gender === "m" ? "ذكر" : "أنثى",
-      role: user.role === "Student" ? "طالب" : "معلم",
-      status: user.active ? "نشط" : "غير نشط",
-    })) || [];
+    users
+      .filter((user) => user.role === "Teacher")
+      .map((user) => ({
+        id: user.username,
+        name: user.name,
+        className:
+          user.role === "Student"
+            ? user.classes[0].name
+            : user.classes.map((c) => c.name).join(", "),
+        gender: user.gender === "m" ? "ذكر" : "أنثى",
+        role: user.role === "Student" ? "طالب" : "معلم",
+        status: user.active ? "نشط" : "غير نشط",
+      })) || [];
   const goToUserDetails = (user) => {
     console.log(user);
   };
@@ -178,7 +180,8 @@ const TeachersScreen = () => {
       {/* Dialog */}
       <GenericDialog
         openDialog={openDialog}
-        title="اضافة معلم جديد"
+        setOpenDialog={setOpenDialog}
+        title="اضافة معلم  جديد"
         componentType="form"
       >
         <Grid container spacing={2} sx={{ width: "100%" }}>
@@ -188,25 +191,17 @@ const TeachersScreen = () => {
           <Grid item xs={12}>
             <TextField fullWidth label="الصف" variant="outlined" />
           </Grid>
-          <Grid2 size={12}>
+          <Grid2 size={12} sx={{ justifyContent: "space-between" , flexDirection: "row"}}>
             <RowRadioButtonsGroup title="الجنس">
               <FormControlLabel value="ذكر" control={<Radio />} label="ذكر" />
               <FormControlLabel value="أنثى" control={<Radio />} label="أنثى" />
             </RowRadioButtonsGroup>
-          </Grid2>
-          <Grid2
-            sx={{
-              justifyContent: "space-between",
-              gap: 2,
-              flex: 1,
-            }}
-            size={12}
-          >
             <RowRadioButtonsGroup title="النوع">
               <FormControlLabel value="طالب" control={<Radio />} label="طالب" />
               <FormControlLabel value="معلم" control={<Radio />} label="معلم" />
             </RowRadioButtonsGroup>
           </Grid2>
+
           <Grid item xs={12}>
             <MultipleSelect label="المواد الدراسية" multiple />
           </Grid>
