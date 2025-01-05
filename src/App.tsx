@@ -13,6 +13,7 @@ import { prefixer } from "stylis";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import UserDetailsScreen from "./screens/main/UserDetailsScreen";
+import SubjectsScreen from "./screens/main/SubjectsScreen";
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -43,6 +44,7 @@ function App() {
             <Route path="/userList" element={<UserListScreen />} />
             <Route path="/results" element={<ResultsScreen />} />
             <Route path="/userDetails" element={<UserDetailsScreen />} />
+            <Route path="subjects" element={<SubjectsScreen/>} />
           </Routes>
         </ThemeProvider>
       </CacheProvider>

@@ -77,7 +77,7 @@ const UserListScreen = () => {
       >
         <Grid2 size={12}>
           <Button variant="contained" onClick={() => setOpenDialog(true)}>
-            اضافه مستخدم
+          اضافة مستخدم
           </Button>
         </Grid2>
       </Grid2>
@@ -192,7 +192,7 @@ const UserListScreen = () => {
             <TextField fullWidth label="الصف" variant="outlined" />
           </Grid>
           <Grid2 size={12}>
-            <RowRadioButtonsGroup title="الجنس">
+            <RowRadioButtonsGroup  title="الجنس">
               <FormControlLabel value="ذكر" control={<Radio />} label="ذكر" />
               <FormControlLabel value="أنثى" control={<Radio />} label="أنثى" />
             </RowRadioButtonsGroup>
@@ -205,7 +205,7 @@ const UserListScreen = () => {
             }}
             size={12}
           >
-            <RowRadioButtonsGroup title="النوع">
+            <RowRadioButtonsGroup selectedValue={()=> console.log()} title="النوع">
               <FormControlLabel value="طالب" control={<Radio />} label="طالب" />
               <FormControlLabel value="معلم" control={<Radio />} label="معلم" />
             </RowRadioButtonsGroup>
@@ -220,7 +220,7 @@ const UserListScreen = () => {
           sx={{ marginTop: 2 }}
           onClick={() => setOpenDialog(false)}
         >
-          اضافه
+          اضافة
         </Button>
       </GenericDialog>
     </Box>

@@ -18,18 +18,7 @@ const MenuProps = {
   },
 };
 
-const names = [
-  "Oliver Hansen",
-  "Van Henry",
-  "April Tucker",
-  "Ralph Hubbard",
-  "Omar Alexander",
-  "Carlos Abbott",
-  "Miriam Wagner",
-  "Bradley Wilkerson",
-  "Virginia Andrews",
-  "Kelly Snyder",
-];
+
 
 function getStyles(name: string, personName: string[], theme: Theme) {
   return {
@@ -42,11 +31,13 @@ function getStyles(name: string, personName: string[], theme: Theme) {
 interface Props {
   multiple?: boolean;
   label?: string;
+  names:[]
 }
 
 export default function MultipleSelect({
   multiple = true,
   label = "الصف الدراسي",
+  names
 }: Props) {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState<string[]>([]);

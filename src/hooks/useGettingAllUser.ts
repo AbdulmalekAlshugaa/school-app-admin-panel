@@ -17,11 +17,12 @@ const useGettingAllUser = () => {
     isLoading,
     isError,
     error,
+    isSuccess
   } = useQuery({
     queryKey: ["users"],
     queryFn: fetchUsers,
   });
-  return { users, isLoading, isError, error };
+  return { users, isLoading, isError, error, isSuccess };
 };
 
 export default useGettingAllUser;

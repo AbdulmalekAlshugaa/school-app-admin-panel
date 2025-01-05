@@ -73,7 +73,6 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
       score: parseInt(score),
     };
 
-    mutate(data);
     mutate(data, {
       onSuccess: () => {
         setOpenDialog(false);
@@ -373,7 +372,7 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
           sx={{ mt: 3, width: "100%", flexGrow: 1 }}
           onClick={handleAddingResult}
         >
-          اضافه النتيجة
+          اضافة النتيجة
         </LoadingButton>
       </GenericDialog>
       <StyledDataGrid

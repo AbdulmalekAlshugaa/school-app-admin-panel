@@ -13,6 +13,7 @@ import createCache from "@emotion/cache";
 import rtlPlugin from "stylis-plugin-rtl";
 import { prefixer } from "stylis";
 import TeachersScreen from "./TeachersScreen";
+import SubjectsScreen from "./SubjectsScreen";
 
 const NAVIGATION: Navigation = [
   {
@@ -40,7 +41,7 @@ const NAVIGATION: Navigation = [
   },
   {
     segment: "classes",
-    title: "الفصول",
+    title: "الصفوف الدراسيه",
     icon: <Class />,
   },
   {
@@ -110,6 +111,8 @@ export default function DashboardLayoutBasic() {
               {router.pathname === "/studentList" && <UserListScreen />}
               {router.pathname === "/teacherList" && <TeachersScreen />}
               {router.pathname === "/results" && <ResultsScreen />}
+              {router.pathname === "/subjects" && <SubjectsScreen/>}
+
             </PageContainer>
           </DashboardLayout>
         </AppProvider>
