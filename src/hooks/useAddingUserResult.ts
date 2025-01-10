@@ -2,16 +2,14 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import usersService from "../service/usersService";
 
 const useAddingUserResult = () => {
-    const queryClient = useQueryClient();
-  const addingUserResult = async (data:any) => {
+  const queryClient = useQueryClient();
+  const addingUserResult = async (data: any) => {
     const response = await usersService.post("/addResult", data);
     if (response.status === "success") {
       return response.result;
     }
     return response;
   };
-
-
 
   const {
     data: addingResult,
@@ -44,9 +42,5 @@ const useAddingUserResult = () => {
     mutate,
   };
 };
-
-
-
-
 
 export default useAddingUserResult;

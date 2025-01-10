@@ -33,7 +33,7 @@ import {
 } from "@mui/material";
 import DropDownList from "../../DropDownList/DropDownList";
 import RowRadioButtonsGroup from "../../RadioButton/RowRadioButtonsGroup";
-import useAddingUserResult from "../../../hooks/useAddingUser";
+import useAddingUserResult from "../../../hooks/useAddingUserResult";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AlertMessage from "../../Toast/AlertMessage";
 
@@ -96,18 +96,21 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
     }
+    console.log("params", params);
+    console.log("event", event);
   };
-
   const handleEditClick = (id: GridRowId) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
   const handleSaveClick = (id: GridRowId) => () => {
+    console.log("id", id);
+    console.log("rowModesModel", rowModesModel, [id]);
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
-    //setRows(rows.filter((row) => row.id !== id));
+    console.log("");
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
@@ -123,12 +126,40 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
-    const updatedRow = { ...newRow, isNew: false };
-    //setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-    return updatedRow;
+    [1, 2].map((item) => {
+      console.log("data isisi ", newRow.userId);
+      const data = {
+        year: "2024-2025",
+        userId: "6776bc0881fe8d4fa889f672",
+        subjectId: newRow.id,
+        term: item === 1 ? 1 : 2,
+        score: item === 1 ? newRow.firstTerm : newRow.secondTerm,
+      };
+
+      mutate(data, {
+        onSuccess: () => {
+          setOpenDialog(false);
+          setStudyYear("");
+          setSubject("");
+          setTerm("");
+          setScore("");
+          setIsSuccessPopup(true);
+        },
+        onError: (error) => {
+          console.error("Error adding result:", error);
+          // Handle error state if needed
+        },
+      });
+      setTimeout(function() {
+        
+    }, 2000);
+    });
+
+    return newRow;
   };
 
   const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+    console.log("newRow", newRowModesModel);
     setRowModesModel(newRowModesModel);
   };
   function EditToolbar() {
@@ -257,15 +288,6 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
     },
   ];
 
-  const StyledDataGrid = styled(DataGrid)(({ theme }) => ({
-    "& .actions": {
-      color: theme.palette.text.secondary,
-    },
-    "& .textPrimary": {
-      color: theme.palette.text.primary,
-    },
-  }));
-
   return (
     <Box
       sx={{
@@ -375,7 +397,7 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
           اضافة النتيجة
         </LoadingButton>
       </GenericDialog>
-      <StyledDataGrid
+      <DataGrid
         rows={props.rows}
         style={{ direction: "rtl" }}
         columns={columns}

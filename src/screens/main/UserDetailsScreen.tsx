@@ -1,12 +1,11 @@
 import * as React from "react";
-import { styled } from "@mui/material/styles";
 import { PageContainer } from "@toolpad/core/PageContainer";
 import Grid from "@mui/material/Grid2";
 import Paper from "@mui/material/Paper";
-import { useLocation } from "react-router-dom";
 import {
   AppBar,
   Avatar,
+  Button,
   Card,
   FormControl,
   Grid2,
@@ -19,50 +18,74 @@ import {
 } from "@mui/material";
 import UserProfileTap from "../../components/UserProfile/UserProfileTap";
 import ResultTableCrudGrid from "../../components/Table/Results/ResultTable";
-import useGettingAllUser from "../../hooks/useGettingAllUser";
 import useGettingUserResult from "../../hooks/useGettingUserData";
-
-const Skeleton = styled("div")<{ height: number }>(({ theme, height }) => ({
-  backgroundColor: theme.palette.action.hover,
-  borderRadius: theme.shape.borderRadius,
-  height,
-  content: '" "',
-}));
+import DropDownList from "../../components/DropDownList/DropDownList";
+import useUpdateUserResultStatus from "../../hooks/useUpdateUserResultStatus";
 
 export default function UserDetailsScreen() {
   const { user, isSuccess, isLoading } = useGettingUserResult(
     "6776bc0881fe8d4fa889f672"
   );
-  console.log("success ", isSuccess);
+  const { mutate } = useUpdateUserResultStatus();
   const [studyYear, setStudyYear] = React.useState("");
+  const [studentId, setStudentId] = React.useState("6776bc0881fe8d4fa889f672");
+  const [status, setStatus] = React.useState("");
+  const [description, setDescription] = React.useState("");
+
+  const handleDescriptionChange = (event) => {
+    const newValue = event.target.value;
+    setDescription(newValue);
+  };
+
+  const handleUpdateResultsStatus = () => {
+    const data = {
+      studentId,
+      status,
+      description,
+      year: "2024-2025",
+    };
+    mutate(data, {
+      onSuccess: () => {
+        setDescription("");
+        setStatus("");
+      },
+      onError: (error) => {
+        console.error("Error adding result:", error);
+        // Handle error state if needed
+      },
+    });
+  };
 
   const initialRows =
     isSuccess &&
-    user.results.flatMap((result) =>
-      result.subjects.map((subject, index) => {
-        const firstTerm =
-          subject.marks.find((mark) => mark.term === 1)?.score || 0;
-        const secondTerm =
-          subject.marks.find((mark) => mark.term === 2)?.score || 0;
-        const finalMarks = firstTerm + secondTerm;
-        return {
-          id: index + 1,
-          name: subject.subject.name, // اسم المادة الدراسية
-          firstTerm: firstTerm > 0 ? firstTerm : "غير متوفر",
-          secondTerm: secondTerm > 0 ? secondTerm : "غير متوفر",
-          finalMarks: finalMarks > 0 ? finalMarks : "غير متوفر",
-          status: finalMarks > 50 ? "ناجح" : "راسب", // ناجح if > 50
-        };
-      })
-    );
+    user.results
+      .filter((item) => item.year === "2024-2025")
+      .flatMap((result) => {
+        return result.subjects.map((subject, index) => {
+          const firstTerm =
+            subject.marks.find((mark) => mark.term === 1)?.score || 0;
+          const secondTerm =
+            subject.marks.find((mark) => mark.term === 2)?.score || 0;
+          const finalMarks = firstTerm + secondTerm;
+          const subjectId = subject.subject._id;
+          return {
+            id: subjectId,
+            name: subject.subject.name, // اسم المادة الدراسية
+            firstTerm: firstTerm > 0 ? firstTerm : "غير متوفر",
+            secondTerm: secondTerm > 0 ? secondTerm : "غير متوفر",
+            finalMarks: finalMarks > 0 ? finalMarks : "غير متوفر",
+            status: finalMarks > 50 ? "ناجح" : "راسب", // ناجح if > 50
+            userId: result._id,
+            year: "2024-2025",
+          };
+        });
+      });
 
   const subjects =
     isSuccess &&
     user.results.flatMap((result) =>
       result.subjects.map((subject) => subject.subject)
     );
-
-  console.log(isLoading);
 
   return (
     <>
@@ -169,6 +192,78 @@ export default function UserDetailsScreen() {
                     />
                   </Grid2>
                 </UserProfileTap>
+                <Grid2
+                  container
+                  rowGap={1}
+                  sx={{
+                    flexDirection: "row", // Ensure horizontal arrangement،
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Grid2
+                    marginBottom={2}
+                    sx={{
+                      minWidth: "300",
+                      width: "300",
+                      marginRight: 1,
+                      flexGrow: 0.1,
+                    }}
+                  >
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        الحالة النهايه
+                      </InputLabel>
+                      <DropDownList
+                        setValue={(value) => {
+                          setStatus(value);
+                        }}
+                        label="الحالة النهايه "
+                        value={studyYear}
+                      >
+                        <MenuItem value={"pass"}>ناجح</MenuItem>
+                        <MenuItem value={"fall"}>راسب</MenuItem>
+                      </DropDownList>
+                    </FormControl>
+                  </Grid2>
+
+                  <Grid2
+                    marginBottom={2}
+                    sx={{
+                      flexGrow: 1, // Allow growth
+                    }}
+                  >
+                    <TextField
+                      variant="outlined"
+                      required
+                      id="description"
+                      label="ملاحظة "
+                      name="ناجح ومنقول...."
+                      fullWidth
+                      onChange={handleDescriptionChange}
+                    />
+                  </Grid2>
+
+                  <Grid2
+                    marginBottom={2}
+                    sx={{
+                      minWidth: "300",
+                      width: "300",
+                      height: 55,
+                      marginRight: 1,
+                      flexGrow: 0.1,
+                      marginLeft: 1,
+                      alignSelf: "center",
+                    }}
+                  >
+                    <Button
+                      onClick={handleUpdateResultsStatus}
+                      variant="contained"
+                      sx={{ height: "100%", width: "100%" }}
+                    >
+                      تحديث
+                    </Button>
+                  </Grid2>
+                </Grid2>
               </Grid>
             </Grid>
           </PageContainer>

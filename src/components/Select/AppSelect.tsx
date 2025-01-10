@@ -52,6 +52,8 @@ export default function MultipleSelect({
     );
   };
 
+  console.log("name###", names)
+
   return (
     <div>
       <FormControl sx={{ m: 1, flexGrow: 1, width: "100%" }}>
@@ -72,13 +74,13 @@ export default function MultipleSelect({
           )}
           MenuProps={MenuProps}
         >
-          {names.map((name) => (
+          {names.map((item) => (
             <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, personName, theme)}
+              key={item.name}
+              value={item.name}
+              style={getStyles(item.name, personName, theme)}
             >
-              {name}
+              {item.name}
             </MenuItem>
           ))}
         </Select>
