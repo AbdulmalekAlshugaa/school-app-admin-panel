@@ -24,13 +24,14 @@ import useUpdateUserResultStatus from "../../hooks/useUpdateUserResultStatus";
 
 export default function UserDetailsScreen() {
   const { user, isSuccess, isLoading } = useGettingUserResult(
-    "6776bc0881fe8d4fa889f672"
+    "67648cc645447f17129282a1"
   );
   const { mutate } = useUpdateUserResultStatus();
   const [studyYear, setStudyYear] = React.useState("");
-  const [studentId, setStudentId] = React.useState("6776bc0881fe8d4fa889f672");
+  const [studentId, setStudentId] = React.useState("67648cc645447f17129282a1");
   const [status, setStatus] = React.useState("");
   const [description, setDescription] = React.useState("");
+  const [index, setIndex] = React.useState(0)
 
   const handleDescriptionChange = (event) => {
     const newValue = event.target.value;
@@ -61,7 +62,7 @@ export default function UserDetailsScreen() {
     user.results
       .filter((item) => item.year === "2024-2025")
       .flatMap((result) => {
-        return result.subjects.map((subject, index) => {
+        return result.subjects.map((subject) => {
           const firstTerm =
             subject.marks.find((mark) => mark.term === 1)?.score || 0;
           const secondTerm =
@@ -143,19 +144,21 @@ export default function UserDetailsScreen() {
                   <Typography>الاسم: {user.name}</Typography>
                   <Typography> الصف: {user.className}</Typography>
 
-                  <Typography>الجنس: {user.gender}</Typography>
-                  <Typography>الوظيفة: {user.role}</Typography>
+                  <Typography>الجنس: {user.gender === "m" ? "ذكر" :"أنثى"}</Typography>
+                  <Typography>الوظيفة: {user.role === "Student" ? "طالب":"معلم"}</Typography>
                   <Typography>
                     الحالة: {user.active ? "نشط" : "غير نشط"}
                   </Typography>
+                
                 </Card>
               </Grid>
 
               <Grid size={8}>
                 <UserProfileTap
-                  index={0}
-                  setIndex={(index) => {
-                    console.log(index);
+                  index={index}
+                  setIndex={(pageIndex) => {
+                    console.log(pageIndex)
+                    setIndex(pageIndex)
                   }}
                 >
                   <Grid2
@@ -218,7 +221,7 @@ export default function UserDetailsScreen() {
                           setStatus(value);
                         }}
                         label="الحالة النهايه "
-                        value={studyYear}
+                        value={status}
                       >
                         <MenuItem value={"pass"}>ناجح</MenuItem>
                         <MenuItem value={"fall"}>راسب</MenuItem>

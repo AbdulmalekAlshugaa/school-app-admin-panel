@@ -3,7 +3,13 @@ import LayersIcon from "@mui/icons-material/Layers";
 import { AppProvider, Navigation, Router } from "@toolpad/core/AppProvider";
 import { DashboardLayout } from "@toolpad/core/DashboardLayout";
 import { PageContainer } from "@toolpad/core/PageContainer";
-import { Class, People, Quiz, School, SchoolRounded } from "@mui/icons-material";
+import {
+  Class,
+  People,
+  Quiz,
+  School,
+  SchoolRounded,
+} from "@mui/icons-material";
 import UserListScreen from "./UserListScreen";
 import ResultsScreen from "./ResultsScreen";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -111,8 +117,7 @@ export default function DashboardLayoutBasic() {
               {router.pathname === "/studentList" && <UserListScreen />}
               {router.pathname === "/teacherList" && <TeachersScreen />}
               {router.pathname === "/results" && <ResultsScreen />}
-              {router.pathname === "/subjects" && <SubjectsScreen/>}
-
+              {router.pathname === "/subjects" && <SubjectsScreen />}
             </PageContainer>
           </DashboardLayout>
         </AppProvider>

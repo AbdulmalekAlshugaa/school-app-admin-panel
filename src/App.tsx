@@ -11,9 +11,10 @@ import createCache from "@emotion/cache";
 import rtlPlugin from "stylis-plugin-rtl";
 import { prefixer } from "stylis";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import UserDetailsScreen from "./screens/main/UserDetailsScreen";
 import SubjectsScreen from "./screens/main/SubjectsScreen";
+import UseIsLoginUser from "./hooks/useIsLoginUser";
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -38,13 +39,15 @@ function App() {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Routes>
-            <Route path="/" element={<DashboardLayoutBasic />} />
             <Route path="/login" element={<LoginUser />} />
             <Route path="/signup" element={<UserSignUpScreen />} />
-            <Route path="/userList" element={<UserListScreen />} />
-            <Route path="/results" element={<ResultsScreen />} />
-            <Route path="/userDetails" element={<UserDetailsScreen />} />
-            <Route path="subjects" element={<SubjectsScreen/>} />
+            <Route element={<UseIsLoginUser />}>
+              <Route path="/" element={<DashboardLayoutBasic />} />
+              <Route path="/userList" element={<UserListScreen />} />
+              <Route path="/results" element={<ResultsScreen />} />
+              <Route path="/userDetails" element={<UserDetailsScreen />} />
+              <Route path="subjects" element={<SubjectsScreen />} />
+            </Route>
           </Routes>
         </ThemeProvider>
       </CacheProvider>

@@ -67,7 +67,7 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
   const handleAddingResult = async () => {
     const data = {
       year: studyYear,
-      userId: "6776bc0881fe8d4fa889f672",
+      userId: "67648cc645447f17129282a1",
       subjectId: subject,
       term: parseInt(term),
       score: parseInt(score),
@@ -126,11 +126,10 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
-    [1, 2].map((item) => {
-      console.log("data isisi ", newRow.userId);
+    [1, 2].map((item) => {;
       const data = {
         year: "2024-2025",
-        userId: "6776bc0881fe8d4fa889f672",
+        userId: "67648cc645447f17129282a1",
         subjectId: newRow.id,
         term: item === 1 ? 1 : 2,
         score: item === 1 ? newRow.firstTerm : newRow.secondTerm,

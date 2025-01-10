@@ -1,10 +1,8 @@
 import * as React from "react";
 import { useTheme } from "@mui/material/styles";
-import AppBar from "@mui/material/AppBar";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import NavBar from "../Navbar/NavBar";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -33,76 +31,23 @@ function TabPanel(props: TabPanelProps) {
   );
 }
 
-function a11yProps(index: number) {
-  return {
-    id: `full-width-tab-${index}`,
-    "aria-controls": `full-width-tabpanel-${index}`,
-  };
-}
 interface UserProfileTapProps {
   children: React.ReactNode;
   index: number;
-  setIndex?: React.Dispatch<React.SetStateAction<number>>;
+  setIndex: React.Dispatch<React.SetStateAction<number>>;
 }
 export default function UserProfileTap(props: UserProfileTapProps) {
   const theme = useTheme();
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
 
   return (
     <Box sx={{ bgcolor: "background.gray" }}>
-      <AppBar
-        sx={{
-          backgroundColor: "#C5C5C5",
-          color: "black",
-
-          justifyContent: "center",
-          alignContent: "center",
-          borderRadius: 1,
+      <NavBar
+        setValue={(index = 0) => {
+          props.setIndex(index);
         }}
-        position="static"
-      >
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          indicatorColor="secondary"
-          textColor="inherit"
-          variant="fullWidth"
-          aria-label="full width tabs example"
-        >
-          <Tab
-            sx={{
-              color: "black",
-              fontWeight: "bold",
-              fontSize: "0.9rem",
-            }}
-            label="النتائج"
-            {...a11yProps(0)}
-          />
-          <Tab
-            sx={{
-              color: "black",
-              fontWeight: "bold",
-              fontSize: "0.9rem",
-            }}
-            label="المواد الدراسية "
-            {...a11yProps(1)}
-          />
-          <Tab
-            sx={{
-              color: "black",
-              fontWeight: "bold",
-              fontSize: "0.9rem",
-            }}
-            label="الحضور"
-            {...a11yProps(2)}
-          />
-        </Tabs>
-      </AppBar>
-      <TabPanel value={value} index={props.index} dir={theme.direction}>
+        value={props.index}
+      />
+      <TabPanel value={props.index} index={props.index} dir={theme.direction}>
         {props.children}
       </TabPanel>
     </Box>
