@@ -32,11 +32,14 @@ import DropDownList from "../../components/DropDownList/DropDownList";
 import useGettingClasses from "../../hooks/useGettingClasses";
 
 const UserListScreen = () => {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
-  const [openDialog, setOpenDialog] = React.useState(false);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [openDialog, setOpenDialog] = useState(false);
   const [studyYear, setStudyYear] = useState("");
-  const [className, setClassName] = useState("");
+  const [classNames, setClassName] = useState("");
+  const [gender, setGender] = useState("");
+  const [userType, setUserType] = useState("");
+  const [fullName, setFullName] = useState("");
   const navigate = useNavigate();
   const subjectResponse = useGettingSubjectsResult();
   const { users, isError, isLoading, isSuccess } = useGettingAllUser();
@@ -54,20 +57,33 @@ const UserListScreen = () => {
     setPage(0);
   };
 
+  const handleAddingUser = () => {
+    const data = {
+      fullName,
+      classNames,
+      gender,
+      userType,
+      studyYear,
+    };
+    console.log("data", data);
+    setOpenDialog(false);
+  };
+
   const mappedUsers =
-    users?.map((user) => ({
-      _id:user._id,
-      id: user.username,
-      name: user.name,
-      className:
-        user.role === "Student"
-          ? user.classes[0].name
-          : user.classes.map((c) => c.name).join(", "),
-      gender: user.gender === "m" ? "ذكر" : "أنثى",
-      role: user.role === "Student" ? "طالب" : "معلم",
-      status: user.active ? "نشط" : "غير نشط",
-      results: user.results,
-    })) || [];
+    (isSuccess &&
+      users
+        .filter((item) => item.role === "Student")
+        ?.map((user) => ({
+          _id: user._id,
+          id: user.username,
+          name: user.name,
+          className: user.classes[0].name,
+          gender: user.gender === "m" ? "ذكر" : "أنثى",
+          role: user.role === "Student" ? "طالب" : "معلم",
+          status: user.active ? "نشط" : "غير نشط",
+          results: user.results,
+        }))) ||
+    [];
 
   const goToUserDetails = (user) => {
     navigate(`/userDetails`, {
@@ -77,8 +93,8 @@ const UserListScreen = () => {
 
   return (
     <Box sx={{ padding: theme.spacing(2) }}>
-      {isLoading && <Typography>Loading...</Typography>}
-      {isError && <Typography>Error occurred while fetching data</Typography>}
+      {isLoading && <Typography>جاري تحميل البيانات ...</Typography>}
+      {isError && <Typography>غلط عند تحميل البيانات</Typography>}
       {/* Add User Button */}
       <Grid2
         container
@@ -101,7 +117,6 @@ const UserListScreen = () => {
                 <TableCell
                   sx={{
                     fontWeight: "bold",
-
                     backgroundColor: "#f0f0f0",
                   }}
                 >
@@ -215,7 +230,15 @@ const UserListScreen = () => {
             </DropDownList>
           </FormControl>
           <Grid item xs={12}>
-            <TextField fullWidth label="الاسم" variant="outlined" />
+            <TextField
+              value={fullName}
+              onChange={(event) => {
+                setFullName(event.target.value);
+              }}
+              fullWidth
+              label="الاسم"
+              variant="outlined"
+            />
           </Grid>
           <FormControl sx={{ marginTop: 3 }} fullWidth>
             <InputLabel id="subject-select-label">
@@ -226,7 +249,7 @@ const UserListScreen = () => {
                 setClassName(value);
               }}
               label="اختار الصف"
-              value={className}
+              value={classNames}
             >
               {res.isSuccess &&
                 res.classes.map((clss: any) => (
@@ -248,7 +271,13 @@ const UserListScreen = () => {
           </FormControl>
 
           <Grid2 size={12}>
-            <RowRadioButtonsGroup title="الجنس">
+            <RowRadioButtonsGroup
+              selectedValue={gender}
+              setSelectedValue={(val) => {
+                setGender(val);
+              }}
+              title="الجنس"
+            >
               <FormControlLabel value="m" control={<Radio />} label="ذكر" />
               <FormControlLabel value="f" control={<Radio />} label="أنثى" />
             </RowRadioButtonsGroup>
@@ -261,7 +290,13 @@ const UserListScreen = () => {
             }}
             size={12}
           >
-            <RowRadioButtonsGroup title="النوع">
+            <RowRadioButtonsGroup
+              selectedValue={userType}
+              setSelectedValue={(val) => {
+                setUserType(val);
+              }}
+              title="النوع"
+            >
               <FormControlLabel
                 value="Student"
                 control={<Radio />}
@@ -279,7 +314,7 @@ const UserListScreen = () => {
           variant="contained"
           fullWidth
           sx={{ marginTop: 2 }}
-          onClick={() => setOpenDialog(false)}
+          onClick={() => handleAddingUser()}
         >
           اضافة
         </Button>

@@ -2,7 +2,6 @@ import React from "react";
 import {
   Box,
   Button,
-  FormControl,
   FormControlLabel,
   Grid,
   Grid2,
@@ -48,19 +47,19 @@ const TeachersScreen = () => {
   const mappedUsers =
     (isSuccess &&
       users
-        .filter((user) => user.role === "Teacher")
-        .map((user) => ({
+        .filter((item) => item.role === "Teacher")
+        ?.map((user) => ({
+          _id: user._id,
           id: user.username,
           name: user.name,
-          className:
-            user.role === "Student"
-              ? user.classes[0].name
-              : user.classes.map((c) => c.name).join(", "),
+          className: user.classes.map((c) => c.name).join(", "),
           gender: user.gender === "m" ? "ذكر" : "أنثى",
           role: user.role === "Student" ? "طالب" : "معلم",
           status: user.active ? "نشط" : "غير نشط",
+          results: user.results,
         }))) ||
     [];
+
   const goToUserDetails = (user) => {
     console.log(user);
   };

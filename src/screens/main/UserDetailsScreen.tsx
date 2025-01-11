@@ -22,11 +22,12 @@ import useGettingUserResult from "../../hooks/useGettingUserData";
 import DropDownList from "../../components/DropDownList/DropDownList";
 import useUpdateUserResultStatus from "../../hooks/useUpdateUserResultStatus";
 import { useLocation } from "react-router-dom";
+import useGettingSubjectsResult from "../../hooks/useGettingSubjects";
 
 export default function UserDetailsScreen() {
   const location = useLocation();
   const currentData = location.state;
-
+  const {subjects} = useGettingSubjectsResult();
 
 
   const { user, isSuccess, isLoading } = useGettingUserResult(currentData._id);
@@ -91,11 +92,11 @@ export default function UserDetailsScreen() {
         });
       });
 
-  const subjects =
-    isSuccess &&
-    user.results.flatMap((result) =>
-      result.subjects.map((subject) => subject.subject)
-    );
+  // const subjects =
+  //   isSuccess &&
+  //   user.results.flatMap((result) =>
+  //     result.subjects.map((subject) => subject.subject)
+  //   );
 
   return (
     <>
@@ -242,7 +243,7 @@ export default function UserDetailsScreen() {
                         value={status}
                       >
                         <MenuItem value={"pass"}>ناجح</MenuItem>
-                        <MenuItem value={"fall"}>راسب</MenuItem>
+                        <MenuItem value={"fail"}>راسب</MenuItem>
                       </DropDownList>
                     </FormControl>
                   </Grid2>

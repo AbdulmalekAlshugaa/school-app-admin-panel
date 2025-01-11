@@ -19,7 +19,6 @@ import {
   GridRowModel,
   GridRowEditStopReasons,
 } from "@mui/x-data-grid";
-import { styled } from "@mui/material/styles";
 import { RowData } from "./types";
 import GenericDialog from "../../Popup/GenericDialog";
 import {
@@ -36,7 +35,6 @@ import RowRadioButtonsGroup from "../../RadioButton/RowRadioButtonsGroup";
 import useAddingUserResult from "../../../hooks/useAddingUserResult";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AlertMessage from "../../Toast/AlertMessage";
-import { useAuthContext } from "../../../context/AuthContext";
 
 interface ResultTableProps {
   rows: RowData[];
@@ -59,7 +57,7 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
     {}
   );
   const [openDialog, setOpenDialog] = React.useState(false);
-  const [studyYear, setStudyYear] = React.useState("");
+  const [studyYear, setStudyYear] = React.useState("2024-2025");
   const [subject, setSubject] = React.useState("");
   const [term, setTerm] = React.useState("");
   const [score, setScore] = React.useState("");
@@ -138,8 +136,7 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
       };
 
       mutate(data, {
-        onSuccess: (res) => {
-          console.log("Data is @@@", res);
+        onSuccess: () => {
           setOpenDialog(false);
           setStudyYear("");
           setSubject("");
@@ -277,12 +274,12 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
             }}
             onClick={handleEditClick(id)}
           />,
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            onClick={handleDeleteClick(id)}
-            color="inherit"
-          />,
+          // <GridActionsCellItem
+          //   icon={<DeleteIcon />}
+          //   label="Delete"
+          //   onClick={handleDeleteClick(id)}
+          //   color="inherit"
+          // />,
         ];
       },
     },
@@ -414,6 +411,7 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
         hideFooterPagination={true}
         slots={{ toolbar: EditToolbar }}
       />
+
     </Box>
   );
 }
