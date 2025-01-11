@@ -21,13 +21,14 @@ const LoginUser = () => {
     };
     mutate(data, {
       onSuccess: (res) => {
-        console.log("res", res)
         setPassword("");
         setUsername("");
         localStorage.setItem("token", JSON.stringify(res.accessToken));
         localStorage.setItem("user", JSON.stringify(res.result));
+        console.log("res", res)
       },
     });
+
   };
   const Navigate = useNavigate();
   const goToSignUp = () => {

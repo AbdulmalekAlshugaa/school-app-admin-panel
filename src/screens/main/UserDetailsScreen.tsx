@@ -21,17 +21,24 @@ import ResultTableCrudGrid from "../../components/Table/Results/ResultTable";
 import useGettingUserResult from "../../hooks/useGettingUserData";
 import DropDownList from "../../components/DropDownList/DropDownList";
 import useUpdateUserResultStatus from "../../hooks/useUpdateUserResultStatus";
+import { useLocation } from "react-router-dom";
 
 export default function UserDetailsScreen() {
-  const { user, isSuccess, isLoading } = useGettingUserResult(
-    "67648cc645447f17129282a1"
-  );
+  const location = useLocation();
+  const currentData = location.state;
+
+
+
+  const { user, isSuccess, isLoading } = useGettingUserResult(currentData._id);
   const { mutate } = useUpdateUserResultStatus();
   const [studyYear, setStudyYear] = React.useState("");
-  const [studentId, setStudentId] = React.useState("67648cc645447f17129282a1");
   const [status, setStatus] = React.useState("");
   const [description, setDescription] = React.useState("");
-  const [index, setIndex] = React.useState(0)
+  const [index, setIndex] = React.useState(0);
+
+  const resultsStatus = isSuccess && user.results.find((item) => item.year === "2024-2025")?.status;
+  const resultNote = isSuccess && user.results.find((item) => item.year === "2024-2025")?.description;
+
 
   const handleDescriptionChange = (event) => {
     const newValue = event.target.value;
@@ -40,13 +47,15 @@ export default function UserDetailsScreen() {
 
   const handleUpdateResultsStatus = () => {
     const data = {
-      studentId,
+      studentId: currentData._id,
       status,
       description,
       year: "2024-2025",
     };
     mutate(data, {
-      onSuccess: () => {
+      onSuccess: (res) => {
+        console.log("res", res)
+
         setDescription("");
         setStatus("");
       },
@@ -144,12 +153,20 @@ export default function UserDetailsScreen() {
                   <Typography>الاسم: {user.name}</Typography>
                   <Typography> الصف: {user.className}</Typography>
 
-                  <Typography>الجنس: {user.gender === "m" ? "ذكر" :"أنثى"}</Typography>
-                  <Typography>الوظيفة: {user.role === "Student" ? "طالب":"معلم"}</Typography>
+                  <Typography>
+                    الجنس: {user.gender === "m" ? "ذكر" : "أنثى"}
+                  </Typography>
+                  <Typography>
+                    الوظيفة: {user.role === "Student" ? "طالب" : "معلم"}
+                  </Typography>
                   <Typography>
                     الحالة: {user.active ? "نشط" : "غير نشط"}
                   </Typography>
-                
+                </Card>
+                <Card sx={{ p: 1, marginTop: 2 }}>
+                  <Typography variant="h6"> معلومات النتيجة</Typography>
+                  <Typography>الحالة: {resultsStatus}</Typography>
+                  <Typography> الملاحضه: {resultNote}</Typography>
                 </Card>
               </Grid>
 
@@ -157,8 +174,8 @@ export default function UserDetailsScreen() {
                 <UserProfileTap
                   index={index}
                   setIndex={(pageIndex) => {
-                    console.log(pageIndex)
-                    setIndex(pageIndex)
+                    console.log(pageIndex);
+                    setIndex(pageIndex);
                   }}
                 >
                   <Grid2
@@ -190,6 +207,7 @@ export default function UserDetailsScreen() {
                       </FormControl>
                     </div>
                     <ResultTableCrudGrid
+                      userId={currentData._id}
                       rows={initialRows}
                       subjects={subjects}
                     />

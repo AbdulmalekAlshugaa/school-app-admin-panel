@@ -30,8 +30,7 @@ const TeachersScreen = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(20);
   const [openDialog, setOpenDialog] = React.useState(false);
   const [gender, setGender] = React.useState("m");
-  const [userType, setUserType] = React.useState("Student");
-  const [subjects, setSubjects] = React.useState([]);
+  const [userType, setUserType] = React.useState("Teacher");
   const { users, isError, isLoading, isSuccess } = useGettingAllUser();
 
   const theme = useTheme();

@@ -2,8 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import LoginUser from "./screens/auth/userLogin/LoginUser";
 import UserSignUpScreen from "./screens/auth/userSignUp/SingUpScreen";
 import DashboardLayoutBasic from "./screens/main/DashboardLayoutBasic";
-import UserListScreen from "./screens/main/UserListScreen";
-import ResultsScreen from "./screens/main/ResultsScreen";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { CacheProvider } from "@emotion/react";
@@ -13,8 +11,9 @@ import { prefixer } from "stylis";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import UserDetailsScreen from "./screens/main/UserDetailsScreen";
-import SubjectsScreen from "./screens/main/SubjectsScreen";
 import UseIsLoginUser from "./hooks/useIsLoginUser";
+import { AuthContextProvider } from "./context/AuthContext";
+import NotFound from "./screens/main/NotFound";
 
 // Create rtl cache
 const cacheRtl = createCache({
@@ -33,25 +32,27 @@ const theme = createTheme({
 function App() {
   const queryClient = new QueryClient();
   return (
-    <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
-      <CacheProvider value={cacheRtl}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <Routes>
-            <Route path="/login" element={<LoginUser />} />
-            <Route path="/signup" element={<UserSignUpScreen />} />
-            <Route element={<UseIsLoginUser />}>
-              <Route path="/" element={<DashboardLayoutBasic />} />
-              <Route path="/userList" element={<UserListScreen />} />
-              <Route path="/results" element={<ResultsScreen />} />
-              <Route path="/userDetails" element={<UserDetailsScreen />} />
-              <Route path="subjects" element={<SubjectsScreen />} />
-            </Route>
-          </Routes>
-        </ThemeProvider>
-      </CacheProvider>
-    </QueryClientProvider>
+    <main>
+      <AuthContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <CacheProvider value={cacheRtl}>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <Routes>
+                <Route path="/login" element={<LoginUser />} />
+                <Route path="/signup" element={<UserSignUpScreen />} />
+                <Route element={<UseIsLoginUser />}>
+                  <Route path="/" element={<DashboardLayoutBasic />} />
+                  <Route path="/userDetails" element={<UserDetailsScreen />} />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </ThemeProvider>
+          </CacheProvider>
+        </QueryClientProvider>
+      </AuthContextProvider>
+    </main>
   );
 }
 

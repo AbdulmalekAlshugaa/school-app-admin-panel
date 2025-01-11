@@ -39,7 +39,7 @@ const UserListScreen = () => {
   const [className, setClassName] = useState("");
   const navigate = useNavigate();
   const subjectResponse = useGettingSubjectsResult();
-  const { users, isError, isLoading } = useGettingAllUser();
+  const { users, isError, isLoading, isSuccess } = useGettingAllUser();
   const res = useGettingClasses();
 
   const theme = useTheme();
@@ -56,6 +56,7 @@ const UserListScreen = () => {
 
   const mappedUsers =
     users?.map((user) => ({
+      _id:user._id,
       id: user.username,
       name: user.name,
       className:
@@ -67,16 +68,17 @@ const UserListScreen = () => {
       status: user.active ? "نشط" : "غير نشط",
       results: user.results,
     })) || [];
+
   const goToUserDetails = (user) => {
     navigate(`/userDetails`, {
-      state: { user },
+      state: user,
     });
   };
+
   return (
     <Box sx={{ padding: theme.spacing(2) }}>
       {isLoading && <Typography>Loading...</Typography>}
       {isError && <Typography>Error occurred while fetching data</Typography>}
-
       {/* Add User Button */}
       <Grid2
         container
@@ -155,7 +157,10 @@ const UserListScreen = () => {
               {mappedUsers
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((user) => (
-                  <TableRow onClick={() => goToUserDetails(user)} key={user.id}>
+                  <TableRow
+                    onClick={() => goToUserDetails(user)}
+                    key={user._id}
+                  >
                     <TableCell>{user.id}</TableCell>
                     <TableCell>{user.name}</TableCell>
                     <TableCell

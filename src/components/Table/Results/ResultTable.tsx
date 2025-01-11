@@ -36,11 +36,13 @@ import RowRadioButtonsGroup from "../../RadioButton/RowRadioButtonsGroup";
 import useAddingUserResult from "../../../hooks/useAddingUserResult";
 import LoadingButton from "@mui/lab/LoadingButton";
 import AlertMessage from "../../Toast/AlertMessage";
+import { useAuthContext } from "../../../context/AuthContext";
 
 interface ResultTableProps {
   rows: RowData[];
   subjects: [];
   setRows?: (newRows: RowData[]) => void;
+  userId: string;
 }
 
 declare module "@mui/x-data-grid" {
@@ -67,7 +69,7 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
   const handleAddingResult = async () => {
     const data = {
       year: studyYear,
-      userId: "67648cc645447f17129282a1",
+      userId: props.userId,
       subjectId: subject,
       term: parseInt(term),
       score: parseInt(score),
@@ -126,17 +128,18 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
-    [1, 2].map((item) => {;
+    [1, 2].map((item) => {
       const data = {
         year: "2024-2025",
-        userId: "67648cc645447f17129282a1",
+        userId: props.userId,
         subjectId: newRow.id,
         term: item === 1 ? 1 : 2,
         score: item === 1 ? newRow.firstTerm : newRow.secondTerm,
       };
 
       mutate(data, {
-        onSuccess: () => {
+        onSuccess: (res) => {
+          console.log("Data is @@@", res);
           setOpenDialog(false);
           setStudyYear("");
           setSubject("");
@@ -149,9 +152,7 @@ export default function ResultTableCrudGrid(props: ResultTableProps) {
           // Handle error state if needed
         },
       });
-      setTimeout(function() {
-        
-    }, 2000);
+      setTimeout(function () {}, 2000);
     });
 
     return newRow;

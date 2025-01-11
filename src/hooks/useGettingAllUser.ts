@@ -6,6 +6,7 @@ import usersService from "../service/usersService";
 const useGettingAllUser = () => {
   const fetchUsers = async () => {
     const response = await usersService.getAll("/getAll");
+    console.log("response", response);
     if (response.status === "success") {
       return response.result;
     }
@@ -17,7 +18,7 @@ const useGettingAllUser = () => {
     isLoading,
     isError,
     error,
-    isSuccess
+    isSuccess,
   } = useQuery({
     queryKey: ["users"],
     queryFn: fetchUsers,
